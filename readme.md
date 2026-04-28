@@ -49,22 +49,29 @@ std::vector<double> singularities(double a, double b) {
 ### 4. Метод трапеций
 + [Вики](https://ru.wikipedia.org/wiki/Метод_трапеций)
 + $\int_{a}^{b} f(x)\,dx \approx \sum_{i=0}^{m-1} \frac {f(x_i) + f(x_{i+1})}2(x_{i+1} - x_i)$
-+ Тут короче полное говно, я хз как это использовать, чтоб показать расходимость. Ну вот на нашем интервале будет что-то типа 1.28269e+13. Но если чуть сдвинуть интервал так, чтоб $\frac \pi2$ там всё равно осталась, уже будет норм цифра без ешки. Гпт предложил вариант с последовательным увеличением количества интервалов разбиения
++ Я много думал, что в итоге с этим делать, скорее всего, это лучший вариант: посмотреть результат трапеций для очень большого n, потом сравнить с точным значением через $F(b) - F(a)$. Если разница достаточно мала ($\le10^{-6}$), то скорее сходится
 ```c++
-#include <iostream>
 #include <cmath>
+#include <iostream>
 
-double f(double x) {
+// функция 1/cos(x)
+long double f(const long double x) {
     return 1.0 / std::cos(x);
 }
 
-double trapezoid(double a, double b, int n) {
-    double h = (b - a) / n;
-    double sum = 0.0;
+// первообразная ln|tg(x/2 + pi/4)|
+long double F(const long double x) {
+    return std::log(std::fabs(std::tan(x / 2 + M_PI_4)));
+}
+
+// метод трапеций для n узлов
+long double trapezoid(const long double a, const long double b, int n) {
+    long double h = (b - a) / n;
+    long double sum = 0.0;
 
     for (int i = 0; i < n; ++i) {
-        double x1 = a + i * h;
-        double x2 = a + (i + 1) * h;
+        const long double x1 = a + i * h;
+        const long double x2 = a + (i + 1) * h;
 
         sum += 0.5 * (f(x1) + f(x2)) * h;
     }
@@ -73,17 +80,26 @@ double trapezoid(double a, double b, int n) {
 }
 
 int main() {
-    double a = 0.0;
-    double b = M_PI_2; 
-    // Результат - -4.88388e+13, 1.28269e+13, 1.28269e+12
-    // Но при b = 2, интеграл всё ещё расходится, но значения будут типа 1.12859, 2.5643, -52.8645
-    std::cout << 1 / cos(b) << std::endl;
-    for (int n : {100, 1000, 10000}) {
-        double val = trapezoid(a, b, n);
-        std::cout << "n = " << n << ", integral ~ " << val << "\n";
+    const size_t n = 1e6;
+    const long double eps = 1e-6;
+    constexpr long double a = 0.0;
+    const long double b = M_PI_2 + eps; // Чуть сдвинуто, чтоб проверить при не улетающем в бесконечность значении
+    long double ev = F(b) - F(a);
+
+    long double val = trapezoid(a, b, n);
+    std::cout << "Exact value: " << ev << std::endl;
+    std::cout << "Trapezoid value: " << val << std::endl;
+    std::cout << "Diff: " << std::fabs(ev - val) << std::endl;
+    // Если результат трапеций отличается от точного не более, чем на эпсилон, то интеграл скорее всего сходится
+    if (std::fabs(ev - val) < eps) {
+        std::cout << "Shoditsia" << std::endl;
+    }
+    else {
+        std::cout << "Rasshoditsia" << std::endl;
     }
 
     return 0;
+
 }
 ```
 
