@@ -1,7 +1,6 @@
 // Final version by Big Boss Gosha
 
 #include <iostream>
-#define USE_MATH_DEFINES
 #include <cmath>
 
 using namespace std;
