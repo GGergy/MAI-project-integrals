@@ -1,59 +1,59 @@
 #include <iostream>
-#define _USE_MATH_DEFINES
+#define USE_MATH_DEFINES
 #include <cmath>
 using namespace std;
 
 const int MAX_SIZE = 1000;
 
-//Р§С‚РµРЅРёРµ РёРЅС‚РµСЂРІР°Р»Р°
+//Чтение интервала
 void ReadInterval(double& a, double& b, char interval)
 {
     do 
     {
-        cout << "Р’РІРµРґРёС‚Рµ РЅР°С‡Р°Р»Рѕ РёРЅС‚РµСЂРІР°Р»Р° " << interval << ": ";
+        cout << "Введите начало интервала " << interval << ": ";
         cin >> a;
-        cout << "Р’РІРµРґРёС‚Рµ РєРѕРЅРµС† РёРЅС‚РµСЂРІР°Р»Р° " << interval << ": ";
+        cout << "Введите конец интервала " << interval << ": ";
         cin >> b;
         if (a > b) 
         {
-            cout << "РћС€РёР±РєР°: РЅР°С‡Р°Р»Рѕ РёРЅС‚РµСЂРІР°Р»Р° РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ Р±РѕР»СЊС€Рµ РєРѕРЅС†Р°. РџРѕРІС‚РѕСЂРёС‚Рµ РІРІРѕРґ, РїРѕР¶Р°Р»СѓР№СЃС‚Р°" << endl;
+            cout << "Ошибка: начало интервала не может быть больше конца. Повторите ввод, пожалуйста" << endl;
         }
     } while (a > b);
-    cout << "РРЅС‚РµСЂРІР°Р» " << interval << ": [" << a << "; " << b << "]" << endl;
+    cout << "Интервал " << interval << ": [" << a << "; " << b << "]" << endl;
 }
 
-//Р§С‚РµРЅРёРµ РєРѕР»РёС‡РµСЃС‚РІР° СѓР·Р»РѕРІ
+//Чтение количества узлов
 void ReadKnot(int& knot, string pravilo) {
     double temp;
     do {
-        cout << "Р’РІРµРґРёС‚Рµ РєРѕР»РёС‡РµСЃС‚РІРѕ СѓР·Р»РѕРІ РґР»СЏ РїСЂР°РІРёР»Р° " << pravilo << " С‚РѕС‡РµРє: ";
+        cout << "Введите количество узлов для правила " << pravilo << " точек: ";
         cin >> temp;
         if (temp <= 0 || fabs(temp - round(temp)) > 1e-12) {
-            cout << "РћС€РёР±РєР°: РєРѕР»РёС‡РµСЃС‚РІРѕ СѓР·Р»РѕРІ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РЅР°С‚СѓСЂР°Р»СЊРЅС‹Рј С‡РёСЃР»РѕРј. РџРѕРІС‚РѕСЂРёС‚Рµ РІРІРѕРґ, РїРѕР¶Р°Р»СѓР№СЃС‚Р°" << endl;
+            cout << "Ошибка: количество узлов должно быть натуральным числом. Повторите ввод, пожалуйста" << endl;
         }
     } while (temp <= 0 || fabs(temp - round(temp)) > 1e-12);
     knot = (int)round(temp);
-    cout << "РљРѕР»РёС‡РµСЃС‚РІРѕ СѓР·Р»РѕРІ РїСЂРё РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРё РїСЂР°РІРёР»Р° " << pravilo << " С‚РѕС‡РµРє - " << knot << endl;
+    cout << "Количество узлов при использовании правила " << pravilo << " точек - " << knot << endl;
 }
 
-//РџРѕРґС‹РЅС‚РµРіСЂР°Р»СЊРЅР°СЏ С„СѓРЅРєС†РёСЏРј
+//Подынтегральная функциям
 double InFunction(double x)
 {
     return 1.0/cos(x);
 }
 
-//РџРµСЂРІРѕРѕР±СЂР°Р·РЅР°СЏ
+//Первообразная
 double F(double x)
 {
     double PI = acos(-1.0);
     return log(fabs(tan(x/2 + PI/4)));
 }
 
-//Р’С‹С‡РёСЃР»РµРЅРёРµ РёРЅС‚РµРіСЂР°Р»Р° РЅР° РёРЅС‚РµСЂРІР°Р»Рµ, РёСЃРїРѕР»СЊР·СѓСЏ Р»РµРІРѕРµ РїСЂР°РІРёР»Рѕ
+//Вычисление интеграла на интервале, используя левое правило
 double CalcIntegralLeft(double a, double b, int n)
 {
-    double result = 0.0; //Р РµР·СѓР»СЊС‚Р°С‚ РІС‹С‡РёСЃР»РµРЅРёР№
-    double h = (b-a)/n; //РЁР°Рі СЂР°Р·Р±РёРµРЅРёСЏ
+    double result = 0.0; //Результат вычислений
+    double h = (b-a)/n; //Шаг разбиения
     for (int i = 0; i<=n-1; i++)
     {
         result+=InFunction(a+i*h)*(a+(i+1)*h-(a+i*h));
@@ -61,11 +61,11 @@ double CalcIntegralLeft(double a, double b, int n)
     return result;
 }
 
-//Р’С‹С‡РёСЃР»РµРЅРёРµ РёРЅС‚РµРіСЂР°Р»Р° РЅР° РёРЅС‚РµСЂРІР°Р»Рµ, РёСЃРїРѕР»СЊР·СѓСЏ РїСЂР°РІРёР»Рѕ СЃСЂРµРґРЅРёС… С‚РѕС‡РµРє
+//Вычисление интеграла на интервале, используя правило средних точек
 double CalcIntegralMiddle(double a, double b, int n)
 {
-    double result = 0.0; //Р РµР·СѓР»СЊС‚Р°С‚ РІС‹С‡РёСЃР»РµРЅРёР№
-    double h = (b-a)/n; //РЁР°Рі СЂР°Р·Р±РёРµРЅРёСЏ
+    double result = 0.0; //Результат вычислений
+    double h = (b-a)/n; //Шаг разбиения
     for (int i = 0; i<=n-1; i++)
     {
         result+=InFunction((a+(i+1)*h + a+i*h)/2.0)*(a+(i+1)*h-(a+i*h));
@@ -73,7 +73,7 @@ double CalcIntegralMiddle(double a, double b, int n)
     return result;
 }
 
-//РќР°С…РѕР¶РґРµРЅРёРµ РѕСЃРѕР±РµРЅРЅРѕСЃС‚РµР№
+//Нахождение особенностей
 void SpecialPoints(double set[MAX_SIZE], int& count, double a, double b)
 {
     const double PI = acos(-1.0);
@@ -90,7 +90,7 @@ void SpecialPoints(double set[MAX_SIZE], int& count, double a, double b)
     }
 }
 
-//РџСЂР°РІРёР»Рѕ С‚СЂР°РїРµС†РёР№
+//Правило трапеций
 double Trapezoid(double a, double b, int n)
 {
     double h = (b-a)/n;
@@ -102,9 +102,9 @@ double Trapezoid(double a, double b, int n)
     return sum;
 }
 
-//РћРїСЂРµРґРµР»РµРЅРёРµ СЂР°СЃС…РѕРґРёРјРѕСЃС‚Рё СЃ РїРѕРјРѕС‰СЊСЋ РїСЂР°РІРёР»Р° С‚СЂР°РїРµС†РёР№
+//Определение расходимости с помощью правила трапеций
 bool Rashodimost(double a, double b) {
-    double n_values[] = {100, 200, 400, 800, 1600};
+    int n_values[] = {100, 200, 400, 800, 1600};
     double prev_I = Trapezoid(a, b, n_values[0]);
     int count = 0;
     int steps = sizeof(n_values)/sizeof(n_values[0]);
@@ -127,7 +127,7 @@ bool Rashodimost(double a, double b) {
     }
 }
 
-//РћРїСЂРµРґРµР»РµРЅРёРµ РіР»Р°РІРЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ РёРЅС‚РµРіСЂР°Р»Р° РїРѕ РљРѕС€Рё
+//Определение главного значения интеграла по Коши
 double IntegralCauchy(double a, double b)
 {
     double result = F(b) - F(a);
@@ -136,57 +136,58 @@ double IntegralCauchy(double a, double b)
 
 int main()
 {
-    double begin_A, end_A; //РќР°С‡Р°Р»Рѕ Рё РєРѕРЅРµС† РёРЅС‚РµСЂРІР°Р»Р° Рђ
-    double begin_B, end_B; //РќР°С‡Р°Р»Рѕ Рё РєРѕРЅРµС† РёРЅС‚РµСЂРІР°Р»Р° B
-    double begin_C, end_C; //РќР°С‡Р°Р»Рѕ Рё РєРѕРЅРµС† РёРЅС‚РµСЂРІР°Р»Р° C
-    int n, m; //РљРѕР»РёС‡РµСЃС‚РІРѕ СѓР·Р»РѕРІ РїСЂРё РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРё РїСЂР°РІРёР»Р° Р»РµРІС‹С… Рё СЃСЂРµРґРЅРёС… С‚РѕС‡РµРє
-    double specialPoints[MAX_SIZE]; //РњР°СЃСЃРёРІ РґР»СЏ С…СЂР°РЅРµРЅРёСЏ С‚РѕС‡РµРє СЃ РѕСЃРѕР±РµРЅРЅРѕСЃС‚СЏРјРё
+    setlocale(LC_ALL, "Russian");
+    double begin_A, end_A; //Начало и конец интервала А
+    double begin_B, end_B; //Начало и конец интервала B
+    double begin_C, end_C; //Начало и конец интервала C
+    int n, m; //Количество узлов при использовании правила левых и средних точек
+    double specialPoints[MAX_SIZE]; //Массив для хранения точек с особенностями
     int countSpecialPoints=0;
     
-    //Р§С‚РµРЅРёРµ Рё РїРµС‡Р°С‚СЊ РЅР°С‡Р°Р»СЊРЅС‹С… РґР°РЅРЅС‹С…
-    cout << "Р¤СѓРЅРєС†РёСЏ РґР»СЏ РёРЅС‚РµРіСЂРёСЂРѕРІР°РЅРёСЏ - f(x)=1/cos(x)" << endl;
+    //Чтение и печать начальных данных
+    cout << "Функция для интегрирования - f(x)=1/cos(x)" << endl;
     ReadInterval(begin_A, end_A, 'A');
-    ReadKnot(n, "Р»РµРІС‹С…");
-    ReadKnot(m, "СЃСЂРµРґРЅРёС…");
+    ReadKnot(n, "левых");
+    ReadKnot(m, "средних");
     ReadInterval(begin_B, end_B, 'B');
     ReadInterval(begin_C, end_C, 'C');
 
-    //РўРѕС‡РЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РёРЅС‚РµРіСЂР°Р»Р° РЅР° РёРЅС‚РµСЂРІР°Р»Рµ Рђ
+    //Точное значение интеграла на интервале А
     double resultAccurate=F(end_A)-F(begin_A);
-    cout << "РўРѕС‡РЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РёРЅС‚РµРіСЂР°Р»Р° РЅР° РёРЅС‚РµСЂРІР°Р»Рµ [" << begin_A << "; " << end_A << "] СЂР°РІРЅРѕ " << resultAccurate << endl;
-    //Р›РµРІРѕРµ РїСЂР°РІРёР»Рѕ
+    cout << "Точное значение интеграла на интервале [" << begin_A << "; " << end_A << "] равно " << resultAccurate << endl;
+    //Левое правило
     double resultLeftRule=CalcIntegralLeft(begin_A,end_A,n);
-    cout << "Р—РЅР°С‡РµРЅРёРµ РёРЅС‚РµРіСЂР°Р»Р° РЅР° РёРЅС‚РµСЂРІР°Р»Рµ [" << begin_A << "; " << end_A << "]" << ", РµСЃР»Рё РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ Р»РµРІРѕРµ РїСЂР°РІРёР»Рѕ РґР»СЏ " << n << " СѓР·Р»РѕРІ, СЂР°РІРЅРѕ " << resultLeftRule << endl;
-    //РЎСЂРµРґРЅРµРµ РїСЂР°РІРёР»Рѕ
+    cout << "Значение интеграла на интервале [" << begin_A << "; " << end_A << "]" << ", если использовать левое правило для " << n << " узлов, равно " << resultLeftRule << endl;
+    //Среднее правило
     double resultMiddleRule=CalcIntegralMiddle(begin_A,end_A,m);
-    cout << "Р—РЅР°С‡РµРЅРёРµ РёРЅС‚РµРіСЂР°Р»Р° РЅР° РёРЅС‚РµСЂРІР°Р»Рµ [" << begin_A << "; " << end_A << "]" << ", РµСЃР»Рё РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ СЃСЂРµРґРЅРµРµ РїСЂР°РІРёР»Рѕ РґР»СЏ " << m << " СѓР·Р»РѕРІ, СЂР°РІРЅРѕ " << resultMiddleRule << endl;
+    cout << "Значение интеграла на интервале [" << begin_A << "; " << end_A << "]" << ", если использовать среднее правило для " << m << " узлов, равно " << resultMiddleRule << endl;
     
-    //РћРїСЂРµРґРµР»РµРЅРёРµ РѕСЃРѕР±РµРЅРЅРѕСЃС‚РµР№ РЅР° РёРЅС‚РµСЂРІР°Р»Рµ Р’
+    //Определение особенностей на интервале В
     SpecialPoints(specialPoints, countSpecialPoints, begin_B, end_B);
     if (countSpecialPoints>0)
     {
         for (int i=0; i<countSpecialPoints; i++)
         {
-            cout << i << " С‚РѕС‡РєР° СЃ РѕСЃРѕР±РµРЅРЅРѕСЃС‚СЊСЋ СЂР°РІРЅР° " << specialPoints[i] << endl;
+            cout << i << " точка с особенностью равна " << specialPoints[i] << endl;
         }
     }
     else
     {
-        cout << "РќР° РёРЅС‚РµСЂРІР°Р»Рµ [" << begin_B << "; " << end_B << "]" << " РЅРµС‚ РѕСЃРѕР±РµРЅРЅРѕСЃС‚РµР№" << endl;
+        cout << "На интервале [" << begin_B << "; " << end_B << "]" << " нет особенностей" << endl;
     }
 
-    //РџСЂРѕРІРµСЂРєР° РЅР° СЃС…РѕРґРёРјРѕСЃС‚СЊ/СЂР°СЃС…РѕРґРёРјРѕСЃС‚СЊ
+    //Проверка на сходимость/расходимость
     bool rashodimost = Rashodimost(begin_B,end_B);
     if (rashodimost)
     {
-        cout << "Р¤СѓРЅРєС†РёСЏ СЂР°СЃС…РѕРґРёС‚СЃСЏ" << endl;
+        cout << "Функция расходится" << endl;
     }
     else
     {
-        cout << "Р¤СѓРЅРєС†РёСЏ СЃС…РѕРґРёС‚СЃСЏ" << endl;
+        cout << "Функция сходится" << endl;
     }
     
     double resultCauchy = IntegralCauchy(begin_C, end_C);
-    cout << "Р“Р»Р°РІРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РёРЅС‚РµРіСЂР°Р»Р° РїРѕ РљРѕС€Рё РЅР° РёРЅС‚РµСЂРІР°Р»Рµ [" << begin_C << "; " << end_C << "] СЂР°РІРЅРѕ " << resultCauchy << endl;
+    cout << "Главное значение интеграла по Коши на интервале [" << begin_C << "; " << end_C << "] равно " << resultCauchy << endl;
     return 0;
 }
