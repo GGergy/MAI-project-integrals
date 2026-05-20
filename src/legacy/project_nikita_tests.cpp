@@ -121,10 +121,7 @@ bool Rashodimost(double a, double b) {
     {
         return true;
     }
-    else
-    {
-        return false;
-    }
+    return false;
 }
 
 //Определение главного значения интеграла по Коши
